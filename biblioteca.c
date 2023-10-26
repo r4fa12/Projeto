@@ -155,3 +155,85 @@ void Listar_Clientes() {
         }
     }
 };
+
+void Debito() {
+    char descricao[100];
+    double deb;
+    char cpf2[15];
+    char senha2[100];
+    printf("Digite seu CPF: ");
+    fgets(cpf2, sizeof(cpf2), stdin);
+    int i;
+    for (i = 0; i < 1000; i++) {
+        if (registro[i].existe == 1) {
+            int comp = strcmp(cpf2, registro[i].cpf);
+            if (comp == 0) {
+                break;
+            };
+        };
+    }
+    if (i < 999) {
+        limpar();
+        printf("Digite sua senha: ");
+        fgets(senha2, sizeof(senha2), stdin);
+        int comp2 = strcmp(senha2, registro[i].senha);
+        if (comp2 == 0) {
+            printf("Digite o valor que deseja debitar: ");
+            scanf("%lf", &deb);
+            char tipo1[5] = "Plus\0";
+            int comp3 = strcmp(tipo1,registro[i].conta);
+            if(comp3 == 0){
+                float tarifap = 0.03;
+                deb = deb + (deb * tarifap);
+                if(deb > (registro[i].vinicial + 5000)){
+                    printf("O valor que foi digitado e maior do que a quantidade atual de credito na conta mais o limite de saldo negativo(5000)! ");
+                    printf("Por tanto o debito foi negado.\n");
+                }
+                else{
+                    registro[i].vinicial = registro[i].vinicial - deb;
+                    printf("Debito realizado com sucesso!");
+                    printf("Seu valor atualizado: %.2lf\n", registro[i].vinicial);
+                    sprintf(descricao,"Debito realizado.");
+                    double valor = deb;
+                    int pos = registro[i].pos;
+                    registro[i].extrato[pos].existe = pos;
+                    registro[i].pos = registro[i].pos + 1;
+                    if(registro[i].extrato[pos].existe >= 99){
+                        for(int x = 1; x < 100; x++){
+                            registro[i].extrato[x].existe = registro[i].extrato[x].existe - 1;
+                        }
+                    }
+                    registro[i].extrato[pos].valor = valor;
+                    registro[i].extrato[pos].tarifa = (deb * tarifap);
+                    strcpy(registro[i].extrato[pos].descricao,descricao);
+                }
+            }else {
+                float tarifac = 0.05;
+                deb = deb + (deb * 0.05);
+                if (deb > (registro[i].vinicial + 1000)) {
+                    printf("O valor que foi digitado e maior do que a quantidade atual de credito na conta mais o limite de saldo negativo(1000)! ");
+                    printf("Por tanto o debito foi negado.\n");
+                } else {
+                    registro[i].vinicial = registro[i].vinicial - deb;
+                    printf("Debito realizado com sucesso!");
+                    printf("Seu valor atualizado: %.2lf\n", registro[i].vinicial);
+                    sprintf(descricao,"Debito realizado.");
+                    double valor = deb;
+                    int pos = registro[i].pos;
+                    registro[i].extrato[pos].existe = pos;
+                    registro[i].pos = registro[i].pos + 1;
+                    if(registro[i].extrato[pos].existe >= 99){
+                        for(int x = 1; x < 100; x++){
+                            registro[i].extrato[x].existe = registro[i].extrato[x].existe - 1;
+                        }
+                    }
+                    registro[i].extrato[pos].valor = valor;
+                    registro[i].extrato[pos].tarifa = (deb * tarifac);
+                    strcpy(registro[i].extrato[pos].descricao,descricao);
+                }
+            }
+        }
+    }else{
+        printf("CPF nao encontrado!\n");
+    }
+};
