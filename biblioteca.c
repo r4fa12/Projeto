@@ -139,3 +139,19 @@ void Apagar_Clientes() {
         printf("CPF nao encontrado!\n");
     }
 };
+
+void Listar_Clientes() {
+    printf("--- LISTA DE CLIENTES ---\n");
+    printf("\n");
+    for (int i = 0; i < 1000; i++) {
+        if (registro[i].existe == 1) {
+            printf("\n");
+            printf("Nome: %s\n", registro[i].nome);
+            printf("Cpf: %s\n", registro[i].cpf);
+            printf("Conta: %s\n", registro[i].conta);
+            printf("Valor: %.2lf\n", registro[i].vinicial);
+            printf("Senha: %s\n", registro[i].senha);
+            printf("---------------------\n");
+        }
+    }
+};
