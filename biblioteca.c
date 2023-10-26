@@ -237,3 +237,49 @@ void Debito() {
         printf("CPF nao encontrado!\n");
     }
 };
+
+void Deposito() {
+    char descricao[100];
+    double dep;
+    char cpf2[15];
+    char senha2[100];
+    printf("Digite seu CPF: ");
+    fgets(cpf2, sizeof(cpf2), stdin);
+    int i;
+    for (i = 0; i < 1000; i++) {
+        if (registro[i].existe == 1) {
+            int comp = strcmp(cpf2, registro[i].cpf);
+            if (comp == 0) {
+                break;
+            };
+        };
+    }
+    if (i < 1000) {
+        limpar();
+        printf("Digite sua senha: ");
+        fgets(senha2, sizeof(senha2), stdin);
+        int comp2 = strcmp(senha2, registro[i].senha);
+        if (comp2 == 0) {
+            printf("Digite o valor que deseja depositar: ");
+            scanf("%lf", &dep);
+            registro[i].vinicial = registro[i].vinicial + dep;
+            printf("Deposito realizado com sucesso!\n");
+            printf("Seu valor atualizado: %.2lf\n", registro[i].vinicial);
+            sprintf(descricao,"Deposito realizado.");
+            double valor = dep;
+            int pos = registro[i].pos;
+            registro[i].extrato[pos].existe = pos;
+            registro[i].pos = registro[i].pos + 1;
+            if(registro[i].extrato[pos].existe >= 99){
+                for(int x = 1; x < 100; x++){
+                    registro[i].extrato[x].existe = registro[i].extrato[x].existe - 1;
+                }
+            }
+            registro[i].extrato[pos].valor = valor;
+            registro[i].extrato[pos].tarifa = 0;
+            strcpy(registro[i].extrato[pos].descricao,descricao);
+        }
+    }else{
+        printf("CPF nao encontrado!\n");
+    }
+}
