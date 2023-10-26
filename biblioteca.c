@@ -110,3 +110,32 @@ void Novo_Cliente() {
         };
     };
 };
+
+void Apagar_Clientes() {
+    char cpf2[15];
+    char senha2[100];
+    printf("Digite seu CPF: ");
+    fgets(cpf2, sizeof(cpf2), stdin);
+    int i;
+    for (i = 0; i < 1000; i++) {
+        if (registro[i].existe == 1) {
+            int comp = strcmp(cpf2, registro[i].cpf);
+            if (comp == 0) {
+                break;
+            };
+        };
+    }
+    if (i < 999) {
+        limpar();
+        printf("Digite sua senha: ");
+        fgets(senha2, sizeof(senha2), stdin);
+        int comp2 = strcmp(senha2, registro[i].senha);
+        if (comp2 == 0) {
+            registro[i].existe = 0;
+            printf("Sua conta foi apagada com sucesso!!\n");
+        } else
+            printf("Senha errada!\n");
+    } else {
+        printf("CPF nao encontrado!\n");
+    }
+};
