@@ -60,4 +60,53 @@ void Menu() {
         }
     }while (opcao != 0);
         criararquivo();
-}
+};
+
+void Novo_Cliente() {
+    char nome[100];
+    char cpf[15];
+    char conta[20];
+    size_t len;
+    size_t len2;
+    double vinicial;
+    char senha[100];
+    char descricao[100];
+    printf("Digite o seu nome: ");
+    fgets(nome, sizeof(nome), stdin);
+    printf("Digite seu CPF: ");
+    fgets(cpf, sizeof(cpf), stdin);
+    limpar();
+    printf("Digite qual sera seu tipo de conta(Comum/comum ou Plus/plus):");
+    fgets(conta, sizeof(conta), stdin);
+    len2 = strlen(nome);
+    if (nome[len2 - 1] == '\n') nome[--len2] = 0;
+    len = strlen(conta);
+    if (conta[len - 1] == '\n') conta[--len] = 0;
+    printf("Digite qual o valor inicial da conta: ");
+    scanf("%lf", &vinicial);
+    limpar();
+    printf("Crie sua senha: ");
+    fgets(senha, sizeof(senha), stdin);
+    printf("Sua conta foi criada com sucesso!!\n");
+    for (int i = 0; i < 1000; i++) {
+        if (registro[i].existe == 0) {
+            sprintf(descricao,"CLiente criado com sucesso!");
+            double valor1 = 1;
+            float tarifa1 = 1;
+            registro[i].pos = 1;
+            int pos = registro[i].pos;
+            registro[i].extrato[pos].existe = pos;
+            registro[i].pos = registro[i].pos + 1;
+            registro[i].extrato[pos].valor = valor1;
+            registro[i].extrato[pos].tarifa = tarifa1;
+            strcpy(registro[i].extrato[pos].descricao,descricao);
+            strcpy(registro[i].nome, nome);
+            strcpy(registro[i].senha, senha);
+            strcpy(registro[i].conta, conta);
+            strcpy(registro[i].cpf, cpf);
+            registro[i].vinicial = vinicial;
+            registro[i].existe = 1;
+            break;
+        };
+    };
+};
