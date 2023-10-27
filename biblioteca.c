@@ -283,3 +283,54 @@ void Deposito() {
         printf("CPF nao encontrado!\n");
     }
 }
+
+void Extrato() {
+    char cpf2[15];
+    char senha2[100];
+    printf("Digite seu CPF: ");
+    fgets(cpf2, sizeof(cpf2), stdin);
+    int i;
+    for (i = 0; i < 1000; i++) {
+        if (registro[i].existe == 1) {
+            int comp = strcmp(cpf2, registro[i].cpf);
+            if (comp == 0) {
+                break;
+            };
+        };
+    }
+    if (i < 1000) {
+        limpar();
+        printf("Digite sua senha: ");
+        fgets(senha2, sizeof(senha2), stdin);
+        int comp2 = strcmp(senha2, registro[i].senha);
+        if (comp2 == 0) {
+            printf("\n\n");
+            printf("Cliente: %s\n",registro[i].nome);
+            printf("Cpf: ¨%s\n",registro[i].cpf);
+            printf("Tipo de conta %s\n",registro[i].conta);
+            printf("\n");
+            printf("----- EXTRATO -----\n");
+            printf("\n");
+            FILE*extratoarq = fopen("extratoarq.txt","w");
+            fprintf(extratoarq,"Cliente: %s\n",registro[i].nome);
+            fprintf(extratoarq,"Cpf: ¨%s\n",registro[i].cpf);
+            fprintf(extratoarq,"Tipo de conta %s\n",registro[i].conta);
+            fprintf(extratoarq,"\n");
+            fprintf(extratoarq,"----- EXTRATO -----\n");
+            fprintf(extratoarq,"\n");
+            for(int e = 0; e < 100 ; e++){
+                if(registro[i].extrato[e].existe > 0){
+                    printf("%s\n",registro[i].extrato[e].descricao);
+                    printf("Valor: %.2lf\n",registro[i].extrato[e].valor);
+                    printf("Tarifa: %.2lf\n",registro[i].extrato[e].tarifa);
+                    printf("\n");
+                    fprintf(extratoarq,"%s\n",registro[i].extrato[e].descricao);
+                    fprintf(extratoarq,"Valor: %.2lf\n",registro[i].extrato[e].valor);
+                    fprintf(extratoarq,"Tarifa: %.2lf\n",registro[i].extrato[e].tarifa);
+                    fprintf(extratoarq,"\n");
+                }
+            }
+            fclose(extratoarq);
+        }
+    }
+};
