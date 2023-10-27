@@ -71,17 +71,27 @@ void Novo_Cliente() {
     double vinicial;
     char senha[100];
     char descricao[100];
+    char testeconta[10];
+    char testeconta2[10];
+    sprintf(testeconta,"Comum");
+    sprintf(testeconta2,"Plus");
     printf("Digite o seu nome: ");
     fgets(nome, sizeof(nome), stdin);
     printf("Digite seu CPF: ");
     fgets(cpf, sizeof(cpf), stdin);
     limpar();
-    printf("Digite qual sera seu tipo de conta(Comum/comum ou Plus/plus):");
-    fgets(conta, sizeof(conta), stdin);
+    int comp;
+    int comp2;
+    do{
+        printf("Digite qual sera seu tipo de conta(Comum ou Plus):");
+        fgets(conta, sizeof(conta), stdin);
+        len = strlen(conta);
+        if(conta[len - 1] == '\n') conta[--len] = 0;
+        comp = strcmp(conta, testeconta);
+        comp2 = strcmp(conta, testeconta2);
+    }while(comp != 0 && comp2 != 0);
     len2 = strlen(nome);
     if (nome[len2 - 1] == '\n') nome[--len2] = 0;
-    len = strlen(conta);
-    if (conta[len - 1] == '\n') conta[--len] = 0;
     printf("Digite qual o valor inicial da conta: ");
     scanf("%lf", &vinicial);
     limpar();
@@ -107,7 +117,7 @@ void Novo_Cliente() {
             registro[i].vinicial = vinicial;
             registro[i].existe = 1;
             break;
-        };
+        }
     };
 };
 
