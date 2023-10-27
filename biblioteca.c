@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-Cliente registro[1000];
+Cliente registro[1000]; //numero de clientes que podem ser regitrado, e sua respectiva Lista
 
-int criararquivo(){
-    FILE*registroarq = fopen("arqclientes","wb");
+int criararquivo(){      //Função para criar o arquivo geral do banco 
+    FILE*registroarq = fopen("arqclientes","wb"); 
   if(registroarq == NULL){
     return 1;
   }
@@ -15,15 +15,15 @@ int criararquivo(){
     return 0;
 }
 
-void limpar() {
+void limpar() {  //limpar os buffs
     int c;
     while ((c = getchar()) != '\n' && c != EOF) {}
 };
 
-void Menu() {
+void Menu() { // função do menu onde aparecem as operações do banco 
     int cod;
     cod = lerarquivo();
-    if(cod == 1){
+    if(cod == 1){                   //comparação para saber se o arquivo foi lido com sucesso 
         printf("Nao foi possivel ler o arquivo!");
     }
     Cliente *cliente = malloc(sizeof(Cliente));
@@ -59,10 +59,10 @@ void Menu() {
                 break;
         }
     }while (opcao != 0);
-        criararquivo();
+        criararquivo();     //criando o arquivo quando o programa é fechado
 };
 
-void Novo_Cliente() {
+void Novo_Cliente() { //função de criar o cliente
     char nome[100];
     char cpf[15];
     char conta[20];
@@ -82,7 +82,7 @@ void Novo_Cliente() {
     limpar();
     int comp;
     int comp2;
-    do{
+    do{             //comparação entre as contas existentes e as digitadas (somente sao validas contas Comum e Plus)
         printf("Digite qual sera seu tipo de conta(Comum ou Plus):");
         fgets(conta, sizeof(conta), stdin);
         len = strlen(conta);
@@ -91,7 +91,7 @@ void Novo_Cliente() {
         comp2 = strcmp(conta, testeconta2);
     }while(comp != 0 && comp2 != 0);
     len2 = strlen(nome);
-    if (nome[len2 - 1] == '\n') nome[--len2] = 0;
+    if (nome[len2 - 1] == '\n') nome[--len2] = 0;       //para tirar o \n do final do nome
     printf("Digite qual o valor inicial da conta: ");
     scanf("%lf", &vinicial);
     limpar();
@@ -99,7 +99,7 @@ void Novo_Cliente() {
     fgets(senha, sizeof(senha), stdin);
     printf("Sua conta foi criada com sucesso!!\n");
     for (int i = 0; i < 1000; i++) {
-        if (registro[i].existe == 0) {
+        if (registro[i].existe == 0) {  //para saber se é um cliente existente
             sprintf(descricao,"CLiente criado com sucesso!");
             double valor1 = 1;
             float tarifa1 = 1;
@@ -121,13 +121,13 @@ void Novo_Cliente() {
     };
 };
 
-void Apagar_Clientes() {
+void Apagar_Clientes() {        //função de apagar um cliente existente
     char cpf2[15];
     char senha2[100];
     printf("Digite seu CPF: ");
     fgets(cpf2, sizeof(cpf2), stdin);
     int i;
-    for (i = 0; i < 1000; i++) {
+    for (i = 0; i < 1000; i++) { // verifica se o cpf esta no banco de dados podendo apagar o cliente 
         if (registro[i].existe == 1) {
             int comp = strcmp(cpf2, registro[i].cpf);
             if (comp == 0) {
@@ -139,7 +139,7 @@ void Apagar_Clientes() {
         limpar();
         printf("Digite sua senha: ");
         fgets(senha2, sizeof(senha2), stdin);
-        int comp2 = strcmp(senha2, registro[i].senha);
+        int comp2 = strcmp(senha2, registro[i].senha); // verifica se a senha esta no banco de dados podendo apagar o cliente 
         if (comp2 == 0) {
             registro[i].existe = 0;
             printf("Sua conta foi apagada com sucesso!!\n");
@@ -150,7 +150,7 @@ void Apagar_Clientes() {
     }
 };
 
-void Listar_Clientes() {
+void Listar_Clientes() {        //função listar clientes
     printf("--- LISTA DE CLIENTES ---\n");
     printf("\n");
     for (int i = 0; i < 1000; i++) {
@@ -166,15 +166,15 @@ void Listar_Clientes() {
     }
 };
 
-void Debito() {
+void Debito() { //função de debito
     char descricao[100];
     double deb;
     char cpf2[15];
     char senha2[100];
     printf("Digite seu CPF: ");
-    fgets(cpf2, sizeof(cpf2), stdin);
+    fgets(cpf2, sizeof(cpf2), stdin); 
     int i;
-    for (i = 0; i < 1000; i++) {
+    for (i = 0; i < 1000; i++) { // verifica se o cpf esta no banco de dados
         if (registro[i].existe == 1) {
             int comp = strcmp(cpf2, registro[i].cpf);
             if (comp == 0) {
@@ -186,15 +186,15 @@ void Debito() {
         limpar();
         printf("Digite sua senha: ");
         fgets(senha2, sizeof(senha2), stdin);
-        int comp2 = strcmp(senha2, registro[i].senha);
+        int comp2 = strcmp(senha2, registro[i].senha);// verifica se a senha esta de acordo com o cpf digitado
         if (comp2 == 0) {
             printf("Digite o valor que deseja debitar: ");
             scanf("%lf", &deb);
             char tipo1[5] = "Plus\0";
             int comp3 = strcmp(tipo1,registro[i].conta);
-            if(comp3 == 0){
+            if(comp3 == 0){         //verifica o tipo de conta (Comum ou Plus)
                 float tarifap = 0.03;
-                deb = deb + (deb * tarifap);
+                deb = deb + (deb * tarifap);            //aplica a tarifa 
                 if(deb > (registro[i].vinicial + 5000)){
                     printf("O valor que foi digitado e maior do que a quantidade atual de credito na conta mais o limite de saldo negativo(5000)! ");
                     printf("Por tanto o debito foi negado.\n");
@@ -214,12 +214,12 @@ void Debito() {
                         }
                     }
                     registro[i].extrato[pos].valor = valor;
-                    registro[i].extrato[pos].tarifa = (deb * tarifap);
+                    registro[i].extrato[pos].tarifa = (deb * tarifap);      //adiciona no extrato do cliente as informações
                     strcpy(registro[i].extrato[pos].descricao,descricao);
                 }
             }else {
                 float tarifac = 0.05;
-                deb = deb + (deb * 0.05);
+                deb = deb + (deb * 0.05);        //aplica a tarifa 2
                 if (deb > (registro[i].vinicial + 1000)) {
                     printf("O valor que foi digitado e maior do que a quantidade atual de credito na conta mais o limite de saldo negativo(1000)! ");
                     printf("Por tanto o debito foi negado.\n");
@@ -238,7 +238,7 @@ void Debito() {
                         }
                     }
                     registro[i].extrato[pos].valor = valor;
-                    registro[i].extrato[pos].tarifa = (deb * tarifac);
+                    registro[i].extrato[pos].tarifa = (deb * tarifac);      //adiciona no extrato do cliente as informações
                     strcpy(registro[i].extrato[pos].descricao,descricao);
                 }
             }
@@ -248,7 +248,7 @@ void Debito() {
     }
 };
 
-void Deposito() {
+void Deposito() { //função deposito
     char descricao[100];
     double dep;
     char cpf2[15];
@@ -256,7 +256,7 @@ void Deposito() {
     printf("Digite seu CPF: ");
     fgets(cpf2, sizeof(cpf2), stdin);
     int i;
-    for (i = 0; i < 1000; i++) {
+    for (i = 0; i < 1000; i++) {        //verifica se o cpf é existente 
         if (registro[i].existe == 1) {
             int comp = strcmp(cpf2, registro[i].cpf);
             if (comp == 0) {
@@ -267,7 +267,7 @@ void Deposito() {
     if (i < 1000) {
         limpar();
         printf("Digite sua senha: ");
-        fgets(senha2, sizeof(senha2), stdin);
+        fgets(senha2, sizeof(senha2), stdin); //verifica se a senha condiz com o cpf digitado
         int comp2 = strcmp(senha2, registro[i].senha);
         if (comp2 == 0) {
             printf("Digite o valor que deseja depositar: ");
@@ -282,25 +282,25 @@ void Deposito() {
             registro[i].pos = registro[i].pos + 1;
             if(registro[i].extrato[pos].existe >= 99){
                 for(int x = 1; x < 100; x++){
-                    registro[i].extrato[x].existe = registro[i].extrato[x].existe - 1;
+                    registro[i].extrato[x].existe = registro[i].extrato[x].existe - 1; 
                 }
             }
             registro[i].extrato[pos].valor = valor;
             registro[i].extrato[pos].tarifa = 0;
-            strcpy(registro[i].extrato[pos].descricao,descricao);
+            strcpy(registro[i].extrato[pos].descricao,descricao); //adiciona no extrato 
         }
     }else{
         printf("CPF nao encontrado!\n");
     }
 }
 
-void Extrato() {
+void Extrato() { //função extrato
     char cpf2[15];
     char senha2[100];
     printf("Digite seu CPF: ");
     fgets(cpf2, sizeof(cpf2), stdin);
     int i;
-    for (i = 0; i < 1000; i++) {
+    for (i = 0; i < 1000; i++) {        //verifica se o cpf existe
         if (registro[i].existe == 1) {
             int comp = strcmp(cpf2, registro[i].cpf);
             if (comp == 0) {
@@ -312,7 +312,7 @@ void Extrato() {
         limpar();
         printf("Digite sua senha: ");
         fgets(senha2, sizeof(senha2), stdin);
-        int comp2 = strcmp(senha2, registro[i].senha);
+        int comp2 = strcmp(senha2, registro[i].senha);  //verifica se a senha condiz com o cpf digitado
         if (comp2 == 0) {
             printf("\n\n");
             printf("Cliente: %s\n",registro[i].nome);
@@ -321,7 +321,7 @@ void Extrato() {
             printf("\n");
             printf("----- EXTRATO -----\n");
             printf("\n");
-            FILE*extratoarq = fopen("extratoarq.txt","w");
+            FILE*extratoarq = fopen("extratoarq.txt","w");  //cria um arquivo para o extrato
             fprintf(extratoarq,"Cliente: %s\n",registro[i].nome);
             fprintf(extratoarq,"Cpf: ¨%s\n",registro[i].cpf);
             fprintf(extratoarq,"Tipo de conta %s\n",registro[i].conta);
@@ -329,7 +329,7 @@ void Extrato() {
             fprintf(extratoarq,"----- EXTRATO -----\n");
             fprintf(extratoarq,"\n");
             for(int e = 0; e < 100 ; e++){
-                if(registro[i].extrato[e].existe > 0){
+                if(registro[i].extrato[e].existe > 0){      //verifica se o extrato existe e printa o mesmo 
                     printf("%s\n",registro[i].extrato[e].descricao);
                     printf("Valor: %.2lf\n",registro[i].extrato[e].valor);
                     printf("Tarifa: %.2lf\n",registro[i].extrato[e].tarifa);
@@ -337,7 +337,7 @@ void Extrato() {
                     fprintf(extratoarq,"%s\n",registro[i].extrato[e].descricao);
                     fprintf(extratoarq,"Valor: %.2lf\n",registro[i].extrato[e].valor);
                     fprintf(extratoarq,"Tarifa: %.2lf\n",registro[i].extrato[e].tarifa);
-                    fprintf(extratoarq,"\n");
+                    fprintf(extratoarq,"\n");       //le as informacoes do extrato
                 }
             }
             fclose(extratoarq);
@@ -345,7 +345,7 @@ void Extrato() {
     }
 };
 
-void Transferencias() {
+void Transferencias() { //função tranferencia entre contas 
     double qtdf;
     char descricao[100];
     char descricao2[100];
@@ -357,7 +357,7 @@ void Transferencias() {
     printf("Digite seu CPF: ");
     fgets(cpf2, sizeof(cpf2), stdin);
     int i;
-    for (i = 0; i < 1000; i++) {
+    for (i = 0; i < 1000; i++) {        //verifica se o cpf existe 
         if (registro[i].existe == 1) {
             int comp = strcmp(cpf2, registro[i].cpf);
             if (comp == 0) {
@@ -367,14 +367,14 @@ void Transferencias() {
     }
     if (i < 1000) {
         limpar();
-        printf("Digite sua senha: ");
+        printf("Digite sua senha: ");       //verifica se a senha condiz com o cpf
         fgets(senha2, sizeof(senha2), stdin);
         int comp2 = strcmp(senha2, registro[i].senha);
         if (comp2 == 0) {
             printf("Digite o CPF de quem recebera a trasferencia: ");
             fgets(cpf3, sizeof(cpf3), stdin);
             int j;
-            for (j = 0; j < 1000; j++) {
+            for (j = 0; j < 1000; j++) {        //verifica se o cpf de quem ira receber existe
                 if (registro[j].existe == 1) {
                     int comp = strcmp(cpf3, registro[j].cpf);
                     if (comp == 0) {
@@ -387,7 +387,7 @@ void Transferencias() {
                 sprintf(nomer,registro[i].nome);
                 printf("Digite a quantidade que deseja transferir: ");
                 scanf("%lf",&qtdf);
-                registro[i].vinicial = registro[i].vinicial - qtdf;
+                registro[i].vinicial = registro[i].vinicial - qtdf;  //realiza a tranferencia 
                 registro[j].vinicial = registro[j].vinicial + qtdf;
                 printf("Seu valor atual: %2.lf\n",registro[i].vinicial);
                 sprintf(descricao,"Transferencia realizada para %s",nomep);
@@ -400,12 +400,12 @@ void Transferencias() {
                         registro[i].extrato[x].existe = registro[i].extrato[x].existe - 1;
                     }
                 }
-                registro[i].extrato[pos].valor = valor;
+                registro[i].extrato[pos].valor = valor;        //leva as informacoes da tranferencia para o extrato
                 registro[i].extrato[pos].tarifa = 0;
                 strcpy(registro[i].extrato[pos].descricao,descricao);
                 sprintf(descricao2,"Transferencia recebida de %s",nomer);
                 int pos2 = registro[j].pos;
-                registro[j].extrato[pos2].existe = pos;
+                registro[j].extrato[pos2].existe = pos;      //leva as informacoes da tranferencia para o extrato de quem recebeu 
                 registro[j].pos = registro[j].pos + 1;
                 if(registro[i].extrato[pos].existe >= 99){
                     for(int x = 1; x < 100; x++){
@@ -424,12 +424,12 @@ void Transferencias() {
     }
 };
 
-int lerarquivo(){
-    FILE*registroarq = fopen("arqclientes","rb");
+int lerarquivo(){ //função de ler o arquivo 
+    FILE*registroarq = fopen("arqclientes","rb");  //le o arquivo e escreve em binarios na arqclientes.txt
     if(registroarq == NULL){
         return 1;
     }
     fread(&registro,sizeof(Cliente),1000,registroarq);
-    fclose(registroarq);
+    fclose(registroarq); //fecha o arquivo
     return 0;
 };
