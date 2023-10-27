@@ -334,3 +334,82 @@ void Extrato() {
         }
     }
 };
+
+void Transferencias() {
+    double qtdf;
+    char descricao[100];
+    char descricao2[100];
+    char nomep[20];
+    char nomer[20];
+    char cpf2[15];
+    char senha2[100];
+    char cpf3[15];
+    printf("Digite seu CPF: ");
+    fgets(cpf2, sizeof(cpf2), stdin);
+    int i;
+    for (i = 0; i < 1000; i++) {
+        if (registro[i].existe == 1) {
+            int comp = strcmp(cpf2, registro[i].cpf);
+            if (comp == 0) {
+                break;
+            };
+        };
+    }
+    if (i < 1000) {
+        limpar();
+        printf("Digite sua senha: ");
+        fgets(senha2, sizeof(senha2), stdin);
+        int comp2 = strcmp(senha2, registro[i].senha);
+        if (comp2 == 0) {
+            printf("Digite o CPF de quem recebera a trasferencia: ");
+            fgets(cpf3, sizeof(cpf3), stdin);
+            int j;
+            for (j = 0; j < 1000; j++) {
+                if (registro[j].existe == 1) {
+                    int comp = strcmp(cpf3, registro[j].cpf);
+                    if (comp == 0) {
+                        break;
+                    };
+                };
+            }
+            if(j < 999){
+                sprintf(nomep,registro[j].nome);
+                sprintf(nomer,registro[i].nome);
+                printf("Digite a quantidade que deseja transferir: ");
+                scanf("%lf",&qtdf);
+                registro[i].vinicial = registro[i].vinicial - qtdf;
+                registro[j].vinicial = registro[j].vinicial + qtdf;
+                printf("Seu valor atual: %2.lf\n",registro[i].vinicial);
+                sprintf(descricao,"Transferencia realizada para %s",nomep);
+                double valor = qtdf;
+                int pos = registro[i].pos;
+                registro[i].extrato[pos].existe = pos;
+                registro[i].pos = registro[i].pos + 1;
+                if(registro[i].extrato[pos].existe >= 99){
+                    for(int x = 1; x < 100; x++){
+                        registro[i].extrato[x].existe = registro[i].extrato[x].existe - 1;
+                    }
+                }
+                registro[i].extrato[pos].valor = valor;
+                registro[i].extrato[pos].tarifa = 0;
+                strcpy(registro[i].extrato[pos].descricao,descricao);
+                sprintf(descricao2,"Transferencia recebida de %s",nomer);
+                int pos2 = registro[j].pos;
+                registro[j].extrato[pos2].existe = pos;
+                registro[j].pos = registro[j].pos + 1;
+                if(registro[i].extrato[pos].existe >= 99){
+                    for(int x = 1; x < 100; x++){
+                        registro[i].extrato[x].existe = registro[i].extrato[x].existe - 1;
+                    }
+                }
+                registro[j].extrato[pos2].valor = valor;
+                registro[j].extrato[pos2].tarifa = 0;
+                strcpy(registro[j].extrato[pos2].descricao,descricao2);
+            }else{
+                printf("CPF do recebidor não encontrado!\n");
+            }
+        }
+    }else{
+        printf("CPF nao encontrado!\n");
+    }
+};
