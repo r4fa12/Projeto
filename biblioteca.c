@@ -413,3 +413,13 @@ void Transferencias() {
         printf("CPF nao encontrado!\n");
     }
 };
+
+int lerarquivo(){
+    FILE*registroarq = fopen("arqclientes","rb");
+    if(registroarq == NULL){
+        return 1;
+    }
+    fread(&registro,sizeof(Cliente),1000,registroarq);
+    fclose(registroarq);
+    return 0;
+};
