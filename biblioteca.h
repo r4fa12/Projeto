@@ -1,41 +1,41 @@
-typedef struct{
-    char descricao[100];
-    double valor;
-    float tarifa;
-    int existe;
-}extrato;
+#define maxclientes 1000
 
-typedef struct{
-    char nome[100];
-    char cpf[16];
-    char conta[20];
-    double vinicial;
-    char senha[100];
-    int existe;
-    int pos;
-    extrato extrato[100];
-}Cliente;
+typedef struct {
+  char descricao[100];
+  double valor;
+  float tarifa;
+  int existe;
+} extrato;
+
+typedef struct {
+  char nome[100];
+  char cpf[16];
+  char conta[20];
+  double vinicial;
+  char senha[100];
+  int existe;
+  int pos;
+  extrato extrato[100];
+} Cliente;
 
 void Menu();
 
-void Novo_Cliente();
+void Novo_Cliente(Cliente Nome[]);
 
-void Apagar_Clientes();
+void Apagar_Clientes(Cliente Nome[]);
 
-void Listar_Clientes();
+void Listar_Clientes(Cliente Nome[]);
 
-void Debito();
+void Debito(Cliente Nome[]);
 
-void Deposito();
+void Deposito(Cliente Nome[]);
 
-void Extrato();
+void Extrato(Cliente Nome[]);
 
-void Transferencias();
+void Transferencias(Cliente Nome[]);
 
 void limpar();
 
-int lerarquivo();
+int lerarquivo(Cliente Nome[], char nomearq[]);
 
-int criararquivo();
-
-int criararquivoext();
+int criararquivo(Cliente Nome[], char nomearq[]);
